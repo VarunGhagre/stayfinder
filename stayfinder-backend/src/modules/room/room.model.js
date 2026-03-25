@@ -37,6 +37,12 @@ const roomSchema = new mongoose.Schema(
       ref: "User",
     },
 
+    category: {
+      type: String,
+      enum: ["PG", "Hostel", "Flat", "Villa", "Apartment"],
+      default: "PG",
+    },
+
     availableBeds: Number,
   },
   { timestamps: true },
