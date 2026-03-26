@@ -4,7 +4,8 @@ import {
   getRooms,
   approveRoom,
   getPendingRooms,
-  getRoomById
+  getRoomById,
+  updateRoom
 } from "./room.controller.js";
 
 import { protect } from "../../middleware/authMiddleware.js";
@@ -26,6 +27,12 @@ router.get("/", getRooms);
 router.get("/pending", protect, authorizeRoles("admin"), getPendingRooms);
 
 router.put("/approve/:id", protect, authorizeRoles("admin"), approveRoom);
+
+router.put(
+  "/update/:id",
+  upload.array("images", 5),
+  updateRoom
+);
 
 router.get("/:id", getRoomById);
 

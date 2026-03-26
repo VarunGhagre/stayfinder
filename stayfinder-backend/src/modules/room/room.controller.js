@@ -119,3 +119,36 @@ export const getRoomById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const updateRoom = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const room = await Room.findById(id);
+    if (!room) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+
+    // ✅ new uploaded images
+    let newImages = room.images;
+
+    if (req.files && req.files.length > 0) {
+      newImages = req.files.map(file => file.path);
+    }
+
+    const updatedRoom = await Room.findByIdAndUpdate(
+      id,
+      {
+        ...req.body,
+        images: newImages,
+      },
+      { new: true }
+    );
+
+    res.json({ message: "Room updated", room: updatedRoom });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
