@@ -263,13 +263,7 @@ export default function RoomDetails() {
     fd.append("category", uploadCat);
     try {
       const res = await api.put(`/rooms/update/${room._id}`, fd);
-      setRoom((prev) => ({
-      ...res.data.room,
-      imagesByCategory: {
-      ...prev.imagesByCategory,
-    ...res.data.room.imagesByCategory
-  }
-}));
+      setRoom(res.data.room);
       setFiles([]); setPreviews([]);
       showToast("✓ Images updated successfully!");
     } catch {
