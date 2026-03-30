@@ -13,7 +13,6 @@ function RoomListing() {
   const [beds, setBeds] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const location = useLocation();
-  console.log("Selected Category 👉", selectedCategory);
   const searchData = location.state || {};
 
   useEffect(() => {
