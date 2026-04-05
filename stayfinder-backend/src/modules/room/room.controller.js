@@ -1,4 +1,16 @@
 import Room from "./room.model.js";
+import { v2 as cloudinary } from "cloudinary";
+import fs from "fs";
+
+const uploadToCloudinary = async (filePath, folder = "stayfinder/rooms") => {
+  const result = await cloudinary.uploader.upload(filePath, {
+    folder,
+    resource_type: "image",
+  });
+  // Delete temp file from server after upload
+  fs.unlink(filePath, () => {});
+  return result.secure_url;
+};
 
 export const addRoom = async (req, res) => {
   try {
@@ -123,32 +135,88 @@ export const getRoomById = async (req, res) => {
 export const updateRoom = async (req, res) => {
   try {
     const { id } = req.params;
-
+ 
+    // Find room
     const room = await Room.findById(id);
     if (!room) {
       return res.status(404).json({ message: "Room not found" });
     }
-
-    // ✅ new uploaded images
-    let newImages = room.images;
-
-    if (req.files && req.files.length > 0) {
-      newImages = req.files.map(file => file.path);
+ 
+    // ── STEP 1: Get category from request ───────────────────
+    // Frontend sends: formData.append("category", "room")
+    // Valid values: "room" | "building" | "amenities" | "location"
+    const category = req.body.category || "room";
+ 
+    const validCategories = ["room", "building", "amenities", "location"];
+    if (!validCategories.includes(category)) {
+      return res.status(400).json({
+        message: `Invalid category. Must be one of: ${validCategories.join(", ")}`,
+      });
     }
-
+ 
+    // ── STEP 2: Process new uploaded images ─────────────────
+    let newImageUrls = [];
+ 
+    if (req.files && req.files.length > 0) {
+      // Upload each file to Cloudinary
+      const uploadPromises = req.files.map((file) =>
+        uploadToCloudinary(file.path, `stayfinder/rooms/${category}`)
+      );
+      newImageUrls = await Promise.all(uploadPromises);
+    }
+ 
+    // ── STEP 3: Get existing imagesByCategory ───────────────
+    // Support both old format (room.images) and new format (room.imagesByCategory)
+    const existing = room.imagesByCategory || {
+      room:      room.images || [],
+      building:  room.buildingImages  || [],
+      amenities: room.amenityImages   || [],
+      location:  room.locationImages  || [],
+    };
+ 
+    // ── STEP 4: APPEND new images to the correct category ───
+    // ✅ This NEVER deletes old images — only adds new ones
+    const updatedCategory = [
+      ...existing[category],   // keep ALL old images
+      ...newImageUrls,          // add new ones at the end
+    ];
+ 
+    const updatedImagesByCategory = {
+      ...existing,
+      [category]: updatedCategory,
+    };
+ 
+    // ── STEP 5: Build update object ─────────────────────────
+    // Remove fields that should not be directly updated
+    const { category: _, images: __, ...otherFields } = req.body;
+ 
+    const updateData = {
+      ...otherFields,                           // title, price, description etc.
+      imagesByCategory: updatedImagesByCategory, // updated category images
+      images: updatedImagesByCategory.room,      // backward compat: keep room.images in sync
+    };
+ 
+    // ── STEP 6: Save to DB ──────────────────────────────────
     const updatedRoom = await Room.findByIdAndUpdate(
       id,
-      {
-        ...req.body,
-        images: newImages,
-      },
-      { new: true }
+      updateData,
+      { new: true, runValidators: true }
     );
-
-    res.json({ message: "Room updated", room: updatedRoom });
-
+ 
+    res.status(200).json({
+      message: `${category} images updated successfully`,
+      room: updatedRoom,
+      // Return counts for debugging
+      imageCounts: {
+        room:      updatedRoom.imagesByCategory?.room?.length      || 0,
+        building:  updatedRoom.imagesByCategory?.building?.length  || 0,
+        amenities: updatedRoom.imagesByCategory?.amenities?.length || 0,
+        location:  updatedRoom.imagesByCategory?.location?.length  || 0,
+      },
+    });
+ 
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Server error" });
+    console.error("updateRoom error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
