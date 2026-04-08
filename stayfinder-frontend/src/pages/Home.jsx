@@ -1,20 +1,27 @@
 import Layout from "../components/Layout";
 import { useNavigate } from "react-router-dom";
-import { Search, MapPin, Wallet, Sparkles, Shield, Star, ArrowRight } from "lucide-react";
+import {
+  Search,
+  MapPin,
+  Wallet,
+  Sparkles,
+  Shield,
+  Star,
+  ArrowRight,
+} from "lucide-react";
 import { useState } from "react";
 
 function Home() {
   const navigate = useNavigate();
- const [searchData, setSearchData] = useState({
-  location: "",
-  checkIn: "",
-  checkOut: "",
-  guests: "",
-});
+  const [searchData, setSearchData] = useState({
+    location: "",
+    checkIn: "",
+    checkOut: "",
+    guests: "",
+  });
 
   return (
     <Layout>
-
       {/* ══════════════════════════════════════════
           HERO SECTION
       ══════════════════════════════════════════ */}
@@ -41,7 +48,7 @@ function Home() {
           }}
         />
 
-          <div className="inline-block px-4 py-1 border border-[rgba(201,151,58,0.3)] rounded-full text-xs text-[#C9973A] mb-6">
+        <div className="inline-block px-4 py-1 border border-[rgba(201,151,58,0.3)] rounded-full text-xs text-[#C9973A] mb-6">
           ✦ 4M+ Curated Stays Worldwide
         </div>
 
@@ -61,66 +68,65 @@ function Home() {
 
         {/* SEARCH BOX */}
         <div className="max-w-3xl mx-auto bg-[#1E1E21] border border-[rgba(201,151,58,0.3)] rounded-2xl flex flex-col md:flex-row overflow-hidden">
-
           <div className="flex-1 px-4 py-3 border-b md:border-b-0 md:border-r border-[rgba(201,151,58,0.15)]">
             <p className="text-xs text-[#C9973A]">Destination</p>
             <input
-  type="text"
-  placeholder="Search location"
-  value={searchData.location}
-  onChange={(e) =>
-    setSearchData({ ...searchData, location: e.target.value })
-  }
-  className="bg-transparent outline-none text-sm text-[#F2EDE6] w-full"
-/>
+              type="text"
+              placeholder="Search location"
+              value={searchData.location}
+              onChange={(e) =>
+                setSearchData({ ...searchData, location: e.target.value })
+              }
+              className="bg-transparent outline-none text-sm text-[#F2EDE6] w-full"
+            />
           </div>
 
           <div className="flex-1 px-4 py-3 border-b md:border-b-0 md:border-r border-[rgba(201,151,58,0.15)]">
             <p className="text-xs text-[#C9973A]">Check In</p>
             <input
-  type="date"
-  value={searchData.checkIn}
-  onChange={(e) =>
-    setSearchData({ ...searchData, checkIn: e.target.value })
-  }
-  className="bg-transparent text-sm text-[#F2EDE6]"
-/>
+              type="date"
+              value={searchData.checkIn}
+              onChange={(e) =>
+                setSearchData({ ...searchData, checkIn: e.target.value })
+              }
+              className="bg-transparent text-sm text-[#F2EDE6]"
+            />
           </div>
 
           <div className="flex-1 px-4 py-3 border-b md:border-b-0 md:border-r border-[rgba(201,151,58,0.15)]">
             <p className="text-xs text-[#C9973A]">Check Out</p>
-          <input
-  type="date"
-  value={searchData.checkIn}
-  onChange={(e) =>
-    setSearchData({ ...searchData, checkIn: e.target.value })
-  }
-  className="bg-transparent text-sm text-[#F2EDE6]"
-/>
+            <input
+              type="date"
+              value={searchData.checkIn}
+              onChange={(e) =>
+                setSearchData({ ...searchData, checkIn: e.target.value })
+              }
+              className="bg-transparent text-sm text-[#F2EDE6]"
+            />
           </div>
 
           <div className="flex-1 px-4 py-3">
             <p className="text-xs text-[#C9973A]">Guests</p>
-           <input
-  type="number"
-  placeholder="Guests"
-  value={searchData.guests}
-  onChange={(e) =>
-    setSearchData({ ...searchData, guests: e.target.value })
-  }
-  className="bg-transparent text-sm text-[#F2EDE6] w-full"
-/>
+            <input
+              type="number"
+              placeholder="Guests"
+              value={searchData.guests}
+              onChange={(e) =>
+                setSearchData({ ...searchData, guests: e.target.value })
+              }
+              className="bg-transparent text-sm text-[#F2EDE6] w-full"
+            />
           </div>
 
           {/* Button */}
           <button
-  onClick={() => {
-  navigate("/rooms", { state: searchData });
-}}
-  className="bg-[#C9973A] text-[#0E0E0F] px-6 py-3 hover:bg-[#E8C97A] transition"
->
-  Search
-</button>
+            onClick={() => {
+              navigate("/rooms", { state: searchData });
+            }}
+            className="bg-[#C9973A] text-[#0E0E0F] px-6 py-3 hover:bg-[#E8C97A] transition"
+          >
+            Search
+          </button>
         </div>
 
         {/* STATS */}
@@ -140,8 +146,7 @@ function Home() {
               </h2>
               <p className="text-xs text-[#5C5448]">{label}</p>
             </div>
-            ))}
-       
+          ))}
         </div>
       </section>
 
@@ -152,7 +157,6 @@ function Home() {
           50%       { opacity: 0.35; }
         }
       `}</style>
-
     </Layout>
   );
 }

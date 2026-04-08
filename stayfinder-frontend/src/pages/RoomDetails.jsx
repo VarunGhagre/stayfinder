@@ -407,7 +407,7 @@ export default function RoomDetails() {
           {allImgs.length > 0 ? (
             <div style={{
               display:"grid",
-              gridTemplateColumns:"1.5fr 1fr",
+              gridTemplateColumns:"1fr",
               gridTemplateRows:"repeat(3, 147px)",
               gap:4,
               borderRadius:20,
@@ -456,7 +456,7 @@ export default function RoomDetails() {
               </div>
 
               {/* RIGHT: 4 IndependentCells — each manages its own idx */}
-              {subCells.map((cell, i) => (
+              {/* {subCells.map((cell, i) => (
                 <div key={i} style={{ position:"relative", overflow:"hidden" }}>
                   <IndependentCell
                     imgs={cell.imgs}
@@ -468,7 +468,7 @@ export default function RoomDetails() {
                     onShowAll={() => setLightbox({ imgs:allImgs, idx:0 })}
                   />
                 </div>
-              ))}
+              ))} */}
             </div>
           ) : (
             <div style={{ height:280, borderRadius:20, background:G.bg3, border:`1px solid ${G.b1}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:48 }}>🏠</div>
@@ -494,10 +494,10 @@ export default function RoomDetails() {
 
           {tabImgs.length > 0 ? (
             <>
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:4, borderRadius:14, overflow:"hidden" }}>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(5,1fr)", gap:4, borderRadius:14, overflow:"hidden" }}>
                 {displayImgs.map((img, i) => (
                   <div key={`${activeTab}-${i}`}
-                    style={{ position:"relative", overflow:"hidden", cursor:"pointer", height:(i===0||i===6)?200:145, gridColumn:(i===0||i===6)&&displayImgs.length>2?"span 2":"span 1" }}
+                    style={{ position:"relative", overflow:"hidden", cursor:"pointer", height:(i===0||i===6)?200:200, gridColumn:(i===0||i===6)&&displayImgs.length>2?"span 2":"span 1" }}
                     onClick={() => setLightbox({ imgs:tabImgs, idx:i })}>
                     <img src={img} alt="" style={{ width:"100%", height:"100%", objectFit:"cover", transition:"transform 0.4s" }}
                       onMouseEnter={e=>e.currentTarget.style.transform="scale(1.05)"}
