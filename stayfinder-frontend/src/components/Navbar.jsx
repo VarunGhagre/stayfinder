@@ -1,12 +1,16 @@
 import { Heart, Bell, ChevronDown, Menu, X, Globe } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
+  const navigate = useNavigate();
+
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -82,40 +86,94 @@ function Navbar() {
           <div className="relative hidden md:block" ref={profileRef}>
             <button
               onClick={() => setProfileOpen(!profileOpen)}
-              className="flex items-center gap-2 border rounded-full px-3 py-1.5 bg-[#1E1E21] border-[rgba(201,151,58,0.25)] hover:border-[rgba(201,151,58,0.5)] transition-all"
+              className="flex items-center gap-2 border rounded-full px-3 py-1.5 bg-[#1E1E21] border-[rgba(201,151,58,0.25)] hover:border-[rgba(201,151,58,0.5)]"
             >
               <Menu size={15} />
               <div className="w-7 h-7 rounded-full bg-[#C9973A] flex items-center justify-center text-black text-xs font-bold">
-                AK
+                {userInfo?.name?.[0] || "G"}
               </div>
             </button>
 
             {/* Dropdown */}
-            {profileOpen && (
-              <div className="absolute right-0 mt-2 w-56 bg-[#161618] border border-[rgba(201,151,58,0.2)] rounded-2xl shadow-xl py-2">
-                <div className="px-4 py-3 border-b border-[rgba(201,151,58,0.1)]">
-                  <p className="text-sm text-white font-semibold">
-                    Arjun Kumar
-                  </p>
-                  <p className="text-xs text-gray-400">arjun@email.com</p>
-                </div>
+            {/* DROPDOWN */}
+{profileOpen && (
+  <div className="absolute right-0 mt-2 w-56 bg-[#161618] border border-[rgba(201,151,58,0.2)] rounded-2xl shadow-xl py-2 z-50">
 
-                {["My Profile", "My Trips", "Wishlist"].map((item) => (
-                  <button
-                    key={item}
-                    className="w-full text-left px-4 py-2 text-sm text-[#A09480] hover:text-[#C9973A] hover:bg-[rgba(201,151,58,0.06)]"
-                  >
-                    {item}
-                  </button>
-                ))}
+    {/* USER INFO */}
+    <div className="px-4 py-3 border-b border-[rgba(201,151,58,0.1)]">
+      <p className="text-sm text-white font-semibold">
+        {userInfo?.name || "Guest"}
+      </p>
+      <p className="text-xs text-gray-400">
+        {userInfo?.email || "Not logged in"}
+      </p>
+    </div>
 
-                <div className="border-t my-1 border-[rgba(201,151,58,0.1)]"></div>
+    {/* NOT LOGGED IN */}
+    {!userInfo ? (
+      <>
+        <button
+          onClick={() => navigate("/login")}
+          className="w-full text-left px-4 py-2 text-sm text-[#A09480] hover:text-[#C9973A] hover:bg-[rgba(201,151,58,0.06)] transition"
+        >
+          Login
+        </button>
 
-                <button className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-500/10">
-                  Logout
-                </button>
-              </div>
-            )}
+        <button
+          onClick={() => navigate("/register")}
+          className="w-full text-left px-4 py-2 text-sm text-[#A09480] hover:text-[#C9973A] hover:bg-[rgba(201,151,58,0.06)] transition"
+        >
+          Register
+        </button>
+      </>
+    ) : (
+      <>
+        {/* OWNER */}
+        {userInfo.role === "owner" && (
+          <button
+            onClick={() => navigate("/add-room")}
+            className="w-full text-left px-4 py-2 text-sm text-[#A09480] hover:text-[#C9973A] hover:bg-[rgba(201,151,58,0.06)] transition"
+          >
+            Add Room
+          </button>
+        )}
+
+        {/* USER */}
+        {userInfo.role === "user" && (
+          <button
+            onClick={() => navigate("/bookings")}
+            className="w-full text-left px-4 py-2 text-sm text-[#A09480] hover:text-[#C9973A] hover:bg-[rgba(201,151,58,0.06)] transition"
+          >
+            My Bookings
+          </button>
+        )}
+
+        {/* ADMIN */}
+        {userInfo.role === "admin" && (
+          <button
+            onClick={() => navigate("/admin")}
+            className="w-full text-left px-4 py-2 text-sm text-[#A09480] hover:text-[#C9973A] hover:bg-[rgba(201,151,58,0.06)] transition"
+          >
+            Admin Panel
+          </button>
+        )}
+
+        <div className="border-t my-1 border-[rgba(201,151,58,0.1)]"></div>
+
+        {/* LOGOUT */}
+        <button
+          onClick={() => {
+            localStorage.removeItem("userInfo");
+            window.location.reload(); // 🔥 IMPORTANT FIX
+          }}
+          className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 transition"
+        >
+          Logout
+        </button>
+      </>
+    )}
+  </div>
+)}
           </div>
 
           {/* MOBILE MENU BUTTON */}
@@ -131,20 +189,17 @@ function Navbar() {
       {/* 📱 MOBILE MENU */}
       {menuOpen && (
         <div className="md:hidden px-4 pb-5 pt-3 flex flex-col gap-2 border-t bg-[#0E0E0F]">
-
           {/* MOBILE PROFILE (NEW - NO UI CHANGE) */}
-<div className="flex items-center gap-3 bg-[#1E1E21] border border-[rgba(201,151,58,0.2)] px-4 py-3 rounded-2xl mb-2">
+          <div className="flex items-center gap-3 bg-[#1E1E21] border border-[rgba(201,151,58,0.2)] px-4 py-3 rounded-2xl mb-2">
+            <div className="w-9 h-9 rounded-full bg-[#C9973A] flex items-center justify-center text-black text-sm font-bold">
+              AK
+            </div>
 
-  <div className="w-9 h-9 rounded-full bg-[#C9973A] flex items-center justify-center text-black text-sm font-bold">
-    AK
-  </div>
-
-  <div>
-    <p className="text-sm font-semibold text-white">Arjun Kumar</p>
-    <p className="text-xs text-[#5C5448]">View profile</p>
-  </div>
-
-</div>
+            <div>
+              <p className="text-sm font-semibold text-white">Arjun Kumar</p>
+              <p className="text-xs text-[#5C5448]">View profile</p>
+            </div>
+          </div>
 
           {["Home", "About", "Services", "Contact"].map((item) => (
             <NavLink
