@@ -6,6 +6,7 @@ import Services from "../pages/Services";
 import Contact from "../pages/Contact";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import Wishlist from "../pages/Wishlist";
 
 import RoomListing from "../pages/RoomListing";
 import RoomDetails from "../pages/RoomDetails";
@@ -19,6 +20,7 @@ function AppRoutes() {
       <Route path="/contact" element={<Contact />} />
       <Route path="/rooms" element={<RoomListing />} />
       <Route path="/rooms/:id" element={<RoomDetails />} />
+      <Route path="/wishlist" element={<Wishlist />} />
 
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />

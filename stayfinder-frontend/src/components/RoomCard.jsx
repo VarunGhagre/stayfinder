@@ -1,6 +1,7 @@
 import { Heart, Star, MapPin, BedDouble } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "../api/axios";
 
 function RoomCard({ room, index = 0 }) {
   const navigate = useNavigate();
@@ -9,18 +10,54 @@ function RoomCard({ room, index = 0 }) {
 
   const images = Array.isArray(room.images) ? room.images : [];
 
+  // 🔥 Check if already in wishlist
+  useEffect(() => {
+    const checkWishlist = async () => {
+      try {
+        const { data } = await api.get("/wishlist");
+
+        const exists = data.some(
+          (item) => item.room._id === room._id
+        );
+
+        setLiked(exists);
+      } catch (err) {
+        // ignore if not logged in
+      }
+    };
+
+    checkWishlist();
+  }, [room._id]);
+
   const prevImg = (e) => {
     e.stopPropagation();
-    setImgIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  };
-  const nextImg = (e) => {
-    e.stopPropagation();
-    setImgIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    setImgIndex((prev) =>
+      prev === 0 ? images.length - 1 : prev - 1
+    );
   };
 
-  const handleLike = (e) => {
+  const nextImg = (e) => {
     e.stopPropagation();
-    setLiked(!liked);
+    setImgIndex((prev) =>
+      prev === images.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  // ❤️ Wishlist toggle (API connected)
+  const handleLike = async (e) => {
+    e.stopPropagation();
+
+    try {
+      if (liked) {
+        await api.delete(`/wishlist/${room._id}`);
+        setLiked(false);
+      } else {
+        await api.post(`/wishlist/${room._id}`);
+        setLiked(true);
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Login required");
+    }
   };
 
   return (
@@ -34,6 +71,7 @@ function RoomCard({ room, index = 0 }) {
     >
       {/* ── IMAGE SECTION ── */}
       <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#1E1E21]">
+
         {/* Image */}
         {images.length > 0 ? (
           <img
@@ -50,12 +88,12 @@ function RoomCard({ room, index = 0 }) {
           </div>
         )}
 
-        {/* Prev / Next arrows — show on hover */}
+        {/* Prev / Next */}
         {images.length > 1 && (
           <>
             <button
               onClick={prevImg}
-              className="absolute left-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-105"
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold opacity-0 group-hover:opacity-100 transition"
               style={{
                 background: "rgba(14,14,15,0.75)",
                 backdropFilter: "blur(8px)",
@@ -65,9 +103,10 @@ function RoomCard({ room, index = 0 }) {
             >
               ‹
             </button>
+
             <button
               onClick={nextImg}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-105"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold opacity-0 group-hover:opacity-100 transition"
               style={{
                 background: "rgba(14,14,15,0.75)",
                 backdropFilter: "blur(8px)",
@@ -78,17 +117,19 @@ function RoomCard({ room, index = 0 }) {
               ›
             </button>
 
-            {/* Dot indicators */}
+            {/* Dots */}
             <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1">
               {images.map((_, i) => (
                 <div
                   key={i}
-                  className="rounded-full transition-all duration-200"
+                  className="rounded-full"
                   style={{
                     width: i === imgIndex ? "16px" : "6px",
                     height: "6px",
                     background:
-                      i === imgIndex ? "#C9973A" : "rgba(255,255,255,0.4)",
+                      i === imgIndex
+                        ? "#C9973A"
+                        : "rgba(255,255,255,0.4)",
                   }}
                 />
               ))}
@@ -96,45 +137,27 @@ function RoomCard({ room, index = 0 }) {
           </>
         )}
 
-        {/* Badge (featured / superhost) */}
+        {/* Badge */}
         {room.badge && (
-          <div
-            className="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-[10px] font-semibold uppercase tracking-wider"
-            style={{
-              background: "rgba(14,14,15,0.82)",
-              backdropFilter: "blur(8px)",
-              border: "1px solid rgba(201,151,58,0.35)",
-              color: "#C9973A",
-            }}
-          >
+          <div className="absolute top-3 left-3 px-2.5 py-1 text-[10px] rounded-lg border text-[#C9973A]">
             {room.badge}
           </div>
         )}
 
-        {/* Rating badge */}
-        <div
-          className="absolute top-3 right-12 flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold"
-          style={{
-            background: "rgba(14,14,15,0.82)",
-            backdropFilter: "blur(8px)",
-            border: "1px solid rgba(201,151,58,0.25)",
-            color: "#C9973A",
-          }}
-        >
-          <Star size={11} fill="#C9973A" className="text-[#C9973A]" />
+        {/* Rating */}
+        <div className="absolute top-3 right-12 flex items-center gap-1 px-2 py-1 rounded-lg text-xs text-[#C9973A]">
+          <Star size={11} fill="#C9973A" />
           <span>{room.rating ?? "4.5"}</span>
         </div>
 
-        {/* Wishlist button */}
+        {/* ❤️ Wishlist */}
         <button
           onClick={handleLike}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+          className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center hover:scale-110 transition"
           style={{
-            background: liked ? "rgba(232,82,106,0.2)" : "rgba(14,14,15,0.72)",
-            backdropFilter: "blur(8px)",
-            border: liked
-              ? "1px solid rgba(232,82,106,0.6)"
-              : "1px solid rgba(201,151,58,0.25)",
+            background: liked
+              ? "rgba(232,82,106,0.2)"
+              : "rgba(14,14,15,0.72)",
           }}
         >
           <Heart
@@ -145,59 +168,42 @@ function RoomCard({ room, index = 0 }) {
         </button>
       </div>
 
-      {/* ── CONTENT SECTION ── */}
+      {/* ── CONTENT ── */}
       <div className="mt-0 px-1 pt-3 pb-1">
-        {/* Title + Rating row */}
-        <div className="flex items-start justify-between gap-2">
-          <h2
-            className="font-semibold text-[15px] leading-snug truncate"
-            style={{ fontFamily: "Georgia, serif", color: "#4c4c4c" }}
-          >
+
+        <div className="flex justify-between">
+          <h2 className="text-[15px] text-white truncate">
             {room.title}
           </h2>
-          <div className="flex items-center gap-1 flex-shrink-0 text-sm">
-            <Star size={12} fill="#C9973A" className="text-[#C9973A]" />
-            <span className="text-[#C9973A] font-semibold text-xs">
-              {room.rating ?? "4.5"}
-            </span>
+
+          <div className="flex items-center gap-1 text-xs text-[#C9973A]">
+            <Star size={12} fill="#C9973A" />
+            {room.rating ?? "4.5"}
           </div>
         </div>
 
-        {/* Location */}
-        <div className="flex items-center gap-1 mt-1">
-          <MapPin size={11} className="text-[#5C5448] flex-shrink-0" />
-          <p className="text-[#5C5448] text-xs truncate">
-            {room.city || room.location || "Location not available"}
-          </p>
+        <div className="flex items-center gap-1 mt-1 text-xs text-[#5C5448]">
+          <MapPin size={11} />
+          {room.city || room.location}
         </div>
 
-        {/* Beds available */}
         {room.availableBeds !== undefined && (
-          <div className="flex items-center gap-1 mt-1.5">
-            <BedDouble size={11} className="text-[#5C5448]" />
-            <p className="text-[#5C5448] text-xs">
-              {room.availableBeds} beds available
-            </p>
+          <div className="flex items-center gap-1 mt-1 text-xs text-[#5C5448]">
+            <BedDouble size={11} />
+            {room.availableBeds} beds
           </div>
         )}
 
-        {/* Price */}
-        <div className="mt-2.5 flex items-baseline gap-1">
-          <span
-            className="text-[17px] font-semibold"
-            style={{ fontFamily: "Georgia, serif", color: "#C9973A" }}
-          >
-            ₹{room.price?.toLocaleString("en-IN")}
-          </span>
-          <span className="text-xs text-[#5C5448] font-normal">/month</span>
+        <div className="mt-2 text-[#C9973A] font-semibold">
+          ₹{room.price?.toLocaleString("en-IN")} /month
         </div>
       </div>
 
-      {/* fadeUp keyframe (injected once) */}
+      {/* Animation */}
       <style>{`
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(20px); }
-          to   { opacity: 1; transform: translateY(0);    }
+          to   { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </div>
