@@ -46,8 +46,9 @@ function Register() {
           className="w-full p-2 border bg-transparent"
           onChange={(e) => setForm({ ...form, role: e.target.value })}
         >
-          <option value="user">User (Book Rooms)</option>
-          <option value="owner">Owner (Add Rooms)</option>
+          <option value="user" className="text-black">User (Book Rooms)</option>
+          <option value="owner" className="text-black">Owner (Add Rooms)</option>
+          <option value="owner" className="text-black">Admin</option>
         </select>
 
         <button className="w-full bg-[#C9973A] py-2 text-black">
