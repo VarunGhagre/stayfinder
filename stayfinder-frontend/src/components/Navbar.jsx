@@ -133,7 +133,7 @@ export default function Navbar() {
   useEffect(() => {
     const load = async () => {
       try {
-        const [nr, ur] = await Promise.all([api.get("/notifications"), api.get("/notifications/unread")]);
+        const [nr, ur] = await Promise.all([api.get("/notifications"), api.get("/notifications/unread-count")]);
         setNotifications(nr.data);
         setUnread(ur.data.unread);
       } catch {}

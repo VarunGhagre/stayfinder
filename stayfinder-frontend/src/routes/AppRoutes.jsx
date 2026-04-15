@@ -7,6 +7,7 @@ import Contact from "../pages/Contact";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Wishlist from "../pages/Wishlist";
+import Profile from "../pages/Profile";
 
 import AdminDashboard from "../pages/Admin/AdminDashboard";
 import Users from "../pages/Admin/Users";
@@ -25,6 +26,7 @@ function AppRoutes() {
       <Route path="/rooms" element={<RoomListing />} />
       <Route path="/rooms/:id" element={<RoomDetails />} />
       <Route path="/wishlist" element={<Wishlist />} />
+      <Route path="/profile" element={<Profile />} />
 
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/admin/users" element={<Users />} />
