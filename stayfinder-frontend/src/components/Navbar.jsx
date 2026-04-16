@@ -10,6 +10,8 @@ const G = {
   t1:"#F2EDE6", t2:"#A09480", t3:"#5C5448", rose:"#E8526A",
 };
 
+// 137
+
 const NAV_LINKS = [
   { label:"Home",     to:"/",         Icon:Home    },
   { label:"About",    to:"/about",    Icon:Info    },
@@ -134,6 +136,7 @@ export default function Navbar() {
     const load = async () => {
       try {
         const [nr, ur] = await Promise.all([api.get("/notifications"), api.get("/notifications/unread-count")]);
+        console.log(nr.data)
         setNotifications(nr.data);
         setUnread(ur.data.unread);
       } catch {}
