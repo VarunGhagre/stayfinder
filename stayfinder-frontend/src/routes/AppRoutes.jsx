@@ -8,6 +8,8 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Wishlist from "../pages/Wishlist";
 import Profile from "../pages/Profile";
+import AddRoom from "../pages/AddRoom";
+
 
 import AdminDashboard from "../pages/Admin/AdminDashboard";
 import Users from "../pages/Admin/Users";
@@ -27,6 +29,7 @@ function AppRoutes() {
       <Route path="/rooms/:id" element={<RoomDetails />} />
       <Route path="/wishlist" element={<Wishlist />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/add-room" element={<AddRoom />} />
 
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/admin/users" element={<Users />} />

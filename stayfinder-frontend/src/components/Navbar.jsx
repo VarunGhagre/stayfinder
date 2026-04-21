@@ -173,7 +173,7 @@ export default function Navbar() {
   const roleItems = !userInfo ? [] :
     userInfo.role === "owner" ? [
       { label:"Add Room",  Icon:PlusSquare, path:"/add-room"  },
-      { label:"My Rooms",  Icon:Home,       path:"/my-rooms"  },
+      { label:"My Rooms",  Icon:Home,       path:"rooms"  },
     ] : userInfo.role === "admin" ? [
       { label:"Admin Panel", Icon:ShieldCheck, path:"/admin" },
     ] : [

@@ -8,6 +8,7 @@ import {
 import api from "../api/axios";
 import Layout from "../components/Layout";
 import RoomCard, { RoomCardSkeleton } from "../components/RoomCard";
+import { useNavigate } from "react-router-dom";
 
 // ── Constants ─────────────────────────────────────────────────
 const CATEGORIES = [
@@ -176,10 +177,13 @@ export default function RoomListing() {
 
   const drawerBodyRef = useRef(null);
 
+  const navigate = useNavigate();
+const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
   // ── Fetch rooms ───────────────────────────────────────────
   useEffect(() => {
     setLoading(true);
-    api.get("/rooms")
+    api.get("/rooms?page=1&limit=50")
       .then(({ data }) => { setRooms(data.rooms || data); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
@@ -290,10 +294,41 @@ export default function RoomListing() {
           </div>
 
           {/* Right: result count */}
-          <p style={{ fontSize:12, color:"#5C5448" }}>
+          {/* <p style={{ fontSize:12, color:"#5C5448" }}>
             <strong style={{ color:"#A09480" }}>{filtered.length}</strong> rooms found
             {searchCity && <> in <strong style={{ color:"#C9973A" }}>{searchCity}</strong></>}
-          </p>
+          </p> */}
+
+          <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+
+  <p style={{ fontSize:12, color:"#5C5448" }}>
+    <strong style={{ color:"#A09480" }}>{filtered.length}</strong> rooms found
+    {searchCity && <> in <strong style={{ color:"#C9973A" }}>{searchCity}</strong></>}
+  </p>
+
+  {userInfo?.role === "owner" && (
+    <button
+      onClick={() => navigate("/add-room")}
+      style={{
+        padding:"8px 14px",
+        borderRadius:10,
+        background:"#C9973A",
+        color:"#0E0E0F",
+        fontSize:12,
+        fontWeight:600,
+        border:"none",
+        cursor:"pointer",
+        transition:"all 0.2s"
+      }}
+      onMouseEnter={e => e.target.style.background="#E8C97A"}
+      onMouseLeave={e => e.target.style.background="#C9973A"}
+    >
+      + Add Room
+    </button>
+  )}
+
+</div>
+
         </div>
 
         {/* ── GRID ── */}
