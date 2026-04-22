@@ -236,6 +236,7 @@ export default function RoomDetails() {
     api.get(`/rooms/${id}`)
       .then(res => { setRoom(res.data.room || res.data); setLoading(false); })
       .catch(() => setLoading(false));
+      console.log(room.id)
   }, [id]);
 
   useEffect(() => {
