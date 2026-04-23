@@ -228,6 +228,8 @@ export default function RoomDetails() {
   const [previews,  setPreviews]  = useState([]);
   const [drag,      setDrag]      = useState(false);
   const [toast,     setToast]     = useState("");
+  const [bookingLoading, setBookingLoading] = useState(false);
+
 
   const fileRef  = useRef(null);
   const toastRef = useRef(null);
@@ -236,7 +238,6 @@ export default function RoomDetails() {
     api.get(`/rooms/${id}`)
       .then(res => { setRoom(res.data.room || res.data); setLoading(false); })
       .catch(() => setLoading(false));
-      console.log(room.id)
   }, [id]);
 
   useEffect(() => {
@@ -281,6 +282,23 @@ export default function RoomDetails() {
       showToast("Upload failed — please try again");
     } finally { setUploading(false); }
   };
+
+  const handleBooking = async () => {
+  try {
+    setBookingLoading(true);
+
+    const res = await api.post(`/bookings/${room._id}`);
+
+    showToast("✅ Booking successful!");
+    console.log(res.data);
+
+  } catch (err) {
+    console.error(err);
+    showToast(err.response?.data?.message || "❌ Booking failed");
+  } finally {
+    setBookingLoading(false);
+  }
+};
 
   if (loading) return <Skeleton/>;
   if (!room) return (
@@ -645,8 +663,13 @@ export default function RoomDetails() {
                 ))}
               </div>
 
-              <button className="gold-btn" style={{ width:"100%", padding:13, fontSize:13, marginBottom:5 }}>
-                Book This Room
+              <button 
+              className="gold-btn" 
+              style={{ width:"100%", padding:13, fontSize:13, marginBottom:5 }} 
+              onClick={handleBooking}
+              disabled={bookingLoading}
+              >
+                {bookingLoading ? "Booking..." : "Book This Room"}
               </button>
               <p style={{ textAlign:"center", fontSize:11, color:G.t3, marginBottom:12 }}>No advance payment required</p>
 

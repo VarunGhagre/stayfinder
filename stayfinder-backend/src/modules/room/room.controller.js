@@ -143,7 +143,7 @@ export const updateRoom = async (req, res) => {
     }
  
     // ── STEP 1: Get category from request ───────────────────
-    // Frontend sends: formData.append("category", "room")
+    // Frontend sends: formData.append("category", "PG")
     // Valid values: "room" | "building" | "amenities" | "location"
     const category = req.body.category || "room";
  

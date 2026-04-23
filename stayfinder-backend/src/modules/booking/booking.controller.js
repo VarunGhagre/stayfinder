@@ -1,6 +1,7 @@
 import Booking from "./booking.model.js";
 import Room from "../room/room.model.js";
 import Notification from "../notification/notification.model.js";
+console.log("CREATE BOOKING API HIT");
 
 export const createBooking = async (req, res) => {
   try {
@@ -18,8 +19,9 @@ export const createBooking = async (req, res) => {
     }
 
     // ✅ Decrease available beds
-    room.availableBeds -= 1;
-    await room.save();
+   await Room.findByIdAndUpdate(room._id, {
+  $inc: { availableBeds: -1 }
+});
 
     // ✅ Create booking
     const booking = await Booking.create({
@@ -28,6 +30,8 @@ export const createBooking = async (req, res) => {
       amount: room.tokenAmount,
       paymentStatus: "pending",
     });
+
+    console.log("User:", req.user)
 
     await Notification.create({
       user: room.owner ? room.owner : req.user._id,
@@ -43,6 +47,7 @@ export const createBooking = async (req, res) => {
 
     res.status(201).json(booking);
   } catch (error) {
+    console.error("BOOKING ERROR:", error); 
     res.status(500).json({ message: error.message });
   }
 };

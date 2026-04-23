@@ -43,7 +43,7 @@ const roomSchema = new mongoose.Schema(
       default: "PG",
     },
 
-    availableBeds: Number,
+    // availableBeds: Number,
   },
   { timestamps: true },
 );
