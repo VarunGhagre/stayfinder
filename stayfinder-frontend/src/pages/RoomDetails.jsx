@@ -289,7 +289,7 @@ export default function RoomDetails() {
 
     const res = await api.post(`/bookings/${room._id}`);
 
-    showToast("✅ Booking successful!");
+ showToast("📩 Booking request sent!");
     console.log(res.data);
 
   } catch (err) {

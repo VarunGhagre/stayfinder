@@ -11,43 +11,26 @@ export const createBooking = async (req, res) => {
       return res.status(404).json({ message: "Room not found" });
     }
 
-    // ✅ Bed availability check
     if (room.availableBeds <= 0) {
-      return res.status(400).json({
-        message: "Room full",
-      });
+      return res.status(400).json({ message: "Room full" });
     }
 
-    // ✅ Decrease available beds
-   await Room.findByIdAndUpdate(room._id, {
-  $inc: { availableBeds: -1 }
-});
+    // ❌ beds yaha decrease nahi karna
 
-    // ✅ Create booking
     const booking = await Booking.create({
       user: req.user._id,
       room: room._id,
       amount: room.tokenAmount,
       paymentStatus: "pending",
+      bookingStatus: "pending",   // 👈 IMPORTANT
     });
 
-    console.log("User:", req.user)
+    res.status(201).json({
+  message: "Booking request created",
+  booking
+});
 
-    await Notification.create({
-      user: room.owner ? room.owner : req.user._id,
-      message: `New booking received for ${room.title || "your room"}`,
-    });
-
-    const notification = new Notification({
-      user: room.owner,
-      message: `New booking received for ${room.title}`,
-    });
-
-    await notification.save();
-
-    res.status(201).json(booking);
   } catch (error) {
-    console.error("BOOKING ERROR:", error); 
     res.status(500).json({ message: error.message });
   }
 };
@@ -74,8 +57,23 @@ export const getOwnerBookings = async (req, res) => {
 export const confirmBooking = async (req, res) => {
   const booking = await Booking.findById(req.params.id);
 
-  booking.bookingStatus = "confirmed";
+  if (!booking) {
+    return res.status(404).json({ message: "Booking not found" });
+  }
 
+  const room = await Room.findById(booking.room);
+
+  if (room.availableBeds <= 0) {
+    return res.status(400).json({ message: "No beds available" });
+  }
+
+  // ✅ yaha decrease karo
+  room.availableBeds -= 1;
+  await Room.findByIdAndUpdate(room._id, {
+    $inc: { availableBeds: -1 }
+  });
+
+  booking.bookingStatus = "confirmed";
   await booking.save();
 
   res.json({ message: "Booking confirmed" });
