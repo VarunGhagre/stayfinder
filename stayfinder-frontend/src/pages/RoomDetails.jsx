@@ -285,18 +285,16 @@ export default function RoomDetails() {
 
   const handleBooking = async () => {
   try {
-    setBookingLoading(true);
+    await api.post(`/bookings/${room._id}`);
 
-    const res = await api.post(`/bookings/${room._id}`);
-
- showToast("📩 Booking request sent!");
-    console.log(res.data);
+    showToast("📩 Booking request sent!");
+    
+    setTimeout(() => {
+      navigate("/my-bookings");
+    }, 1000);
 
   } catch (err) {
-    console.error(err);
-    showToast(err.response?.data?.message || "❌ Booking failed");
-  } finally {
-    setBookingLoading(false);
+    showToast("❌ Booking failed");
   }
 };
 

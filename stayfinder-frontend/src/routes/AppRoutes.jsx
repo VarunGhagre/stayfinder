@@ -9,6 +9,7 @@ import Register from "../pages/Register";
 import Wishlist from "../pages/Wishlist";
 import Profile from "../pages/Profile";
 import AddRoom from "../pages/AddRoom";
+import MyBookings from "../pages/MyBookings";
 
 
 import AdminDashboard from "../pages/Admin/AdminDashboard";
@@ -30,6 +31,7 @@ function AppRoutes() {
       <Route path="/wishlist" element={<Wishlist />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/add-room" element={<AddRoom />} />
+      <Route path="/my-bookings" element={<MyBookings />} />
 
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/admin/users" element={<Users />} />

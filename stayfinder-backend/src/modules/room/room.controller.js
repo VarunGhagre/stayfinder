@@ -41,7 +41,6 @@ export const getRooms = async (req, res) => {
 
     if (city) {
       filter.city = city;
-      console.log(city)
     }
 
     if (maxPrice) {
