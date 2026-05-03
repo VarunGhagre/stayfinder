@@ -294,8 +294,16 @@ export default function RoomDetails() {
     }, 1000);
 
   } catch (err) {
+  const msg = err.response?.data?.message;
+
+  if (msg === "You already booked this room") {
+    showToast("⚠️ You already booked this room");
+  } else if (msg === "Room is already full") {
+    showToast("🚫 Room is already full");
+  } else {
     showToast("❌ Booking failed");
   }
+}
 };
 
   if (loading) return <Skeleton/>;

@@ -6,7 +6,8 @@ import {
   confirmBooking,
   assignRoomNumber,
   confirmPayment,
-  cancelBooking
+  cancelBooking,
+  userPayment
 } from "./booking.controller.js";
 
 import { protect } from "../../middleware/authMiddleware.js";
@@ -23,6 +24,8 @@ router.get("/owner", protect, getOwnerBookings);
 router.put("/:id/confirm", protect, confirmBooking);
 
 router.put("/:id/assign-room", protect, assignRoomNumber);
+
+router.put("/:id/pay", protect, userPayment);
 
 router.put(
   "/:id/payment-confirm",

@@ -10,7 +10,8 @@ import Wishlist from "../pages/Wishlist";
 import Profile from "../pages/Profile";
 import AddRoom from "../pages/AddRoom";
 import MyBookings from "../pages/MyBookings";
-
+import PaymentPage from "../pages/PaymentPage";
+import OwnerBookings from "../pages/OwnerBookings";
 
 import AdminDashboard from "../pages/Admin/AdminDashboard";
 import Users from "../pages/Admin/Users";
@@ -32,6 +33,8 @@ function AppRoutes() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/add-room" element={<AddRoom />} />
       <Route path="/my-bookings" element={<MyBookings />} />
+      <Route path="/payment/:id" element={<PaymentPage />} />
+      <Route path="/owner-bookings" element={<OwnerBookings />} />
 
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/admin/users" element={<Users />} />

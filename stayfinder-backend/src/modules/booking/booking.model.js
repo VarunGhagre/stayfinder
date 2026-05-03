@@ -21,7 +21,7 @@ const bookingSchema = new mongoose.Schema(
     },
     paymentMethod: {
     type: String,
-    enum: ["upi", "cash", "bank"],
+    enum: ["UPI", "CASH", "CARD"],
     },
     bookingStatus: {
       type: String,

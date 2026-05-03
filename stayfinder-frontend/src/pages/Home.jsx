@@ -1,18 +1,11 @@
 import Layout from "../components/Layout";
 import { useNavigate } from "react-router-dom";
-import {
-  Search,
-  MapPin,
-  Wallet,
-  Sparkles,
-  Shield,
-  Star,
-  ArrowRight,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 
 function Home() {
   const navigate = useNavigate();
+
   const [searchData, setSearchData] = useState({
     location: "",
     checkIn: "",
@@ -20,16 +13,18 @@ function Home() {
     guests: "",
   });
 
+  // ✅ Owner check
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const isOwner = userInfo?.role === "owner";
+
   return (
     <Layout>
-      {/* ══════════════════════════════════════════
-          HERO SECTION
-      ══════════════════════════════════════════ */}
+      {/* HERO */}
       <section
         className="text-center px-4 md:px-8 py-16"
         style={{ background: "#0E0E0F" }}
       >
-        {/* Background radial glow */}
+        {/* Glow */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -38,9 +33,9 @@ function Home() {
           }}
         />
 
-        {/* Subtle dot-grid texture */}
+        {/* Grid */}
         <div
-          className="absolute inset-0 pointer-events-none opacity-100"
+          className="absolute inset-0 pointer-events-none"
           style={{
             backgroundImage:
               "radial-gradient(rgba(201,151,58,0.07) 1px, transparent 1px)",
@@ -61,7 +56,6 @@ function Home() {
           <span className="text-[#C9973A] italic">sanctuary</span>
         </h1>
 
-        {/* Subtitle */}
         <p className="text-[#A09480] max-w-md mx-auto mb-10">
           Discover extraordinary properties, from villas to hidden retreats.
         </p>
@@ -97,9 +91,9 @@ function Home() {
             <p className="text-xs text-[#C9973A]">Check Out</p>
             <input
               type="date"
-              value={searchData.checkIn}
+              value={searchData.checkOut}
               onChange={(e) =>
-                setSearchData({ ...searchData, checkIn: e.target.value })
+                setSearchData({ ...searchData, checkOut: e.target.value })
               }
               className="bg-transparent text-sm text-[#F2EDE6]"
             />
@@ -118,16 +112,25 @@ function Home() {
             />
           </div>
 
-          {/* Button */}
           <button
-            onClick={() => {
-              navigate("/rooms", { state: searchData });
-            }}
+            onClick={() => navigate("/rooms", { state: searchData })}
             className="bg-[#C9973A] text-[#0E0E0F] px-6 py-3 hover:bg-[#E8C97A] transition"
           >
             Search
           </button>
         </div>
+
+        {/* 🔥 OWNER BUTTON */}
+        {isOwner && (
+          <div className="mt-8 flex justify-center">
+            <button
+              onClick={() => navigate("/owner-bookings")}
+              className="px-6 py-3 bg-[#C9973A] hover:bg-[#ca9430] text-white rounded-xl flex items-center gap-2 transition shadow-lg hover:scale-105"
+            >
+              Owner Dashboard <ArrowRight size={16} />
+            </button>
+          </div>
+        )}
 
         {/* STATS */}
         <div className="flex justify-center gap-8 mt-12 flex-wrap">
@@ -149,14 +152,6 @@ function Home() {
           ))}
         </div>
       </section>
-
-      {/* Pulse keyframe */}
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50%       { opacity: 0.35; }
-        }
-      `}</style>
     </Layout>
   );
 }
