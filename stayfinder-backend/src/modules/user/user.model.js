@@ -9,6 +9,18 @@ const userSchema = new mongoose.Schema({
     enum: ["user", "owner", "admin"],
     default: "user",
   },
+
+   mobile: {
+    type: String,
+    required: true,
+  },
+
+  country: {
+    type: String,
+    enum: ["India", "USA", "UK", "Canada", "Australia"], // 👈 options
+    required: true,
+  },
+  
 });
 
 export default mongoose.model("User", userSchema);

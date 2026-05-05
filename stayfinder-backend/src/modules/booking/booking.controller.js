@@ -34,6 +34,11 @@ export const createBooking = async (req, res) => {
       return res.status(400).json({ message: "Room full" });
     }
 
+    await Notification.create({
+  user: room.owner ? room.owner : req.user._id,
+  message: `New booking received for ${room.title || "your room"}`,
+});
+
     // 🟢 create booking
     const booking = await Booking.create({
       user: req.user._id,
@@ -93,6 +98,12 @@ export const confirmBooking = async (req, res) => {
 
   booking.bookingStatus = "confirmed";
   await booking.save();
+
+    // 🔥 USER KO NOTIFICATION
+  await Notification.create({
+    user: booking.user,
+    message: "Your booking has been confirmed 🎉",
+  });
 
   res.json({ message: "Booking confirmed" });
 };

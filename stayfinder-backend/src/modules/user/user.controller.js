@@ -4,7 +4,14 @@ import generateToken from "../../utils/generateToken.js";
 
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, mobile, country } = req.body;
+
+    // 🔴 validation
+    if (!mobile || !country) {
+      return res.status(400).json({
+        message: "Mobile number and country are required",
+      });
+    }
 
     // check user exists
     const userExists = await User.findOne({ email });
@@ -23,16 +30,20 @@ export const registerUser = async (req, res) => {
       email,
       password: hashedPassword,
       role,
+      mobile,     // ✅ added
+      country,    // ✅ added
     });
 
-    // send response with token
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
+      mobile: user.mobile,     // ✅ return
+      country: user.country,   // ✅ return
       token: generateToken(user._id, user.role),
     });
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -65,6 +76,36 @@ export const loginUser = async (req, res) => {
       token: generateToken(user._id, user.role),
     });
   } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // ✅ update fields
+    user.name = req.body.name || user.name;
+    user.mobile = req.body.mobile || user.mobile;
+    user.country = req.body.country || user.country;
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      role: updatedUser.role,
+      mobile: updatedUser.mobile,
+      country: updatedUser.country,
+    });
+
+  } catch (error) {
+     console.error("UPDATE PROFILE ERROR:", error);
     res.status(500).json({ message: error.message });
   }
 };

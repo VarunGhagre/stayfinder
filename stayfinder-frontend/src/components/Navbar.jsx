@@ -172,6 +172,7 @@ export default function Navbar() {
   // Role-based menu
   const roleItems = !userInfo ? [] :
     userInfo.role === "owner" ? [
+      { label:"My Profile", Icon:Settings,   path:"/profile" }, 
       { label:"Add Room",  Icon:PlusSquare, path:"/add-room"  },
       { label:"My Rooms",  Icon:Home,       path:"rooms"  },
     ] : userInfo.role === "admin" ? [

@@ -12,7 +12,13 @@ const notificationSchema = new mongoose.Schema({
   isRead: {
     type: Boolean,
     default: false
-  }
+  },
+
+    createdAt: {
+    type: Date,
+    default: Date.now,
+    expires: 60, // 🔥 24 hours
+  },
 
 }, { timestamps: true });
 

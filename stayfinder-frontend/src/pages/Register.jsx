@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import api from "../api/axios";
 
 function Register() {
@@ -8,6 +8,8 @@ function Register() {
     email: "",
     password: "",
     role: "user",
+    mobile: "",
+    country: "",
   });
 
   const navigate = useNavigate();
@@ -17,7 +19,6 @@ function Register() {
 
     try {
       const { data } = await api.post("/users/register", form);
-
       localStorage.setItem("userInfo", JSON.stringify(data));
       navigate("/");
     } catch (err) {
@@ -26,36 +27,148 @@ function Register() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[#0E0E0F] text-white">
-      <form onSubmit={handleSubmit} className="bg-[#1E1E21] p-6 rounded-xl w-80 space-y-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#0E0E0F] relative overflow-hidden text-white px-4">
 
-        <h2 className="text-center text-xl">Register</h2>
+      {/* Glow */}
+      <div className="absolute w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-3xl top-[-100px] left-[-100px]" />
+      <div className="absolute w-[400px] h-[400px] bg-[#C9973A]/20 rounded-full blur-3xl bottom-[-100px] right-[-100px]" />
 
-        <input placeholder="Name" className="w-full p-2 border bg-transparent"
-          onChange={(e) => setForm({ ...form, name: e.target.value })} />
+      {/* Card */}
+      <form
+        onSubmit={handleSubmit}
+        className="relative z-10 w-full max-w-sm p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 shadow-xl space-y-5 animate-fadeIn"
+      >
+        <h2 className="text-xl md:text-2xl font-semibold text-center">
+          Create Account
+        </h2>
 
-        <input placeholder="Email" className="w-full p-2 border bg-transparent"
-          onChange={(e) => setForm({ ...form, email: e.target.value })} />
+        {/* Inputs */}
+        {[
+          { placeholder: "Full Name", key: "name" },
+          { placeholder: "Email", key: "email" },
+          { placeholder: "Password", key: "password", type: "password" },
+          { placeholder: "Mobile Number", key: "mobile" },
+        ].map((field) => (
+          <div className="inputBox" key={field.key}>
+            <input
+              type={field.type || "text"}
+              required
+              onChange={(e) =>
+                setForm({ ...form, [field.key]: e.target.value })
+              }
+            />
+            <span>{field.placeholder}</span>
+          </div>
+        ))}
 
-        <input type="password" placeholder="Password"
-          className="w-full p-2 border bg-transparent"
-          onChange={(e) => setForm({ ...form, password: e.target.value })} />
-
-        {/* 🔥 ROLE SELECT */}
+        {/* Country */}
         <select
-          className="w-full p-2 border bg-transparent"
-          onChange={(e) => setForm({ ...form, role: e.target.value })}
+          className="inputSelect"
+          required
+          onChange={(e) => setForm({ ...form, country: e.target.value })}
         >
-          <option value="user" className="text-black">User (Book Rooms)</option>
-          <option value="owner" className="text-black">Owner (Add Rooms)</option>
-          <option value="owner" className="text-black">Admin</option>
+          <option value="">Select Country</option>
+          <option value="India">India</option>
+          <option value="USA">USA</option>
+          <option value="UK">UK</option>
+          <option value="Canada">Canada</option>
+          <option value="Australia">Australia</option>
         </select>
 
-        <button className="w-full bg-[#C9973A] py-2 text-black">
+        {/* Role */}
+        <select
+          className="inputSelect"
+          onChange={(e) => setForm({ ...form, role: e.target.value })}
+        >
+          <option value="user">User</option>
+          <option value="owner">Owner</option>
+        </select>
+
+        {/* Button */}
+        <button className="btn">
           Register
         </button>
 
+        {/* 🔥 Login Link */}
+        <p className="text-center text-sm text-gray-400">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="text-[#C9973A] hover:underline"
+          >
+            Login
+          </Link>
+        </p>
       </form>
+
+      {/* CSS */}
+      <style>{`
+        .inputBox {
+          position: relative;
+        }
+
+        .inputBox input {
+          width: 100%;
+          padding: 12px;
+          border: 1px solid rgba(255,255,255,0.2);
+          background: transparent;
+          border-radius: 10px;
+          outline: none;
+          color: white;
+        }
+
+        .inputBox span {
+          position: absolute;
+          left: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: gray;
+          pointer-events: none;
+          transition: 0.3s;
+        }
+
+        .inputBox input:focus + span,
+        .inputBox input:valid + span {
+          top: -8px;
+          font-size: 12px;
+          color: #C9973A;
+          background: #0E0E0F;
+          padding: 0 5px;
+        }
+
+        .inputSelect {
+          width: 100%;
+          padding: 12px;
+          border-radius: 10px;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.2);
+          color: white;
+          outline: none;
+        }
+
+        .btn {
+          width: 100%;
+          padding: 12px;
+          border-radius: 10px;
+          background: linear-gradient(135deg, #C9973A, #E8C97A);
+          color: black;
+          font-weight: 600;
+          transition: 0.3s;
+        }
+
+        .btn:hover {
+          transform: scale(1.05);
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fadeIn {
+          animation: fadeIn 0.6s ease forwards;
+        }
+      `}</style>
     </div>
   );
 }
