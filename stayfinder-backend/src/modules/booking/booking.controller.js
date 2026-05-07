@@ -164,7 +164,6 @@ export const cancelBooking = async (req, res) => {
 
 export const userPayment = async (req, res) => {
   try {
-    console.log("PAY API HIT");
 
     const booking = await Booking.findById(req.params.id);
 
