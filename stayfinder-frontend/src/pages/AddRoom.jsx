@@ -8,6 +8,7 @@ function AddRoom() {
   const [form, setForm] = useState({
     title: "",
     price: "",
+    priceType: "month", // ✅ NEW
     city: "",
     description: "",
     totalBeds: "",
@@ -47,7 +48,6 @@ function AddRoom() {
 
       alert("Room Added Successfully ✅");
       navigate("/");
-
     } catch (err) {
       alert(err.response?.data?.message || "Error");
     }
@@ -62,13 +62,9 @@ function AddRoom() {
       }}
     >
       <div className="max-w-xl mx-auto bg-[#1E1E21] p-6 rounded-2xl border border-[rgba(201,151,58,0.2)] shadow-xl">
-
-        <h1 className="text-2xl text-[#C9973A] mb-6">
-          Add New Room
-        </h1>
+        <h1 className="text-2xl text-[#C9973A] mb-6">Add New Room</h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-
           <input
             type="text"
             name="title"
@@ -77,13 +73,33 @@ function AddRoom() {
             className="w-full bg-[#26262A] p-3 rounded outline-none"
           />
 
-          <input
-            type="number"
-            name="price"
-            placeholder="Price"
-            onChange={handleChange}
-            className="w-full bg-[#26262A] p-3 rounded outline-none"
-          />
+          <div className="flex gap-3">
+            {/* PRICE */}
+            <input
+              type="number"
+              name="price"
+              placeholder="Price"
+              onChange={handleChange}
+              className="flex-1 bg-[#26262A] p-3 rounded outline-none"
+            />
+
+            {/* PRICE TYPE */}
+            <select
+              name="priceType"
+              value={form.priceType}
+              onChange={handleChange}
+              className="bg-[#26262A] px-4 rounded outline-none text-white"
+            >
+              <option value="night">Per Night</option>
+              <option value="day">Per Day</option>
+              <option value="week">Per Week</option>
+              <option value="month">Per Month</option>
+            </select>
+          </div>
+
+          <p className="text-sm text-[#C9973A]">
+            ₹{form.price || 0} / {form.priceType}
+          </p>
 
           <input
             type="text"
@@ -126,7 +142,6 @@ function AddRoom() {
           >
             Add Room
           </button>
-
         </form>
       </div>
     </div>
