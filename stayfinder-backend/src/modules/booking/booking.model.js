@@ -14,6 +14,35 @@ const bookingSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+
+      // 📅 CHECK-IN
+    checkIn: {
+      type: Date,
+    },
+
+    // 📅 CHECK-OUT
+    checkOut: {
+      type: Date,
+    },
+
+    // 👥 GUESTS
+    guests: {
+      type: Number,
+      default: 1,
+    },
+
+    // 🏷 TOTAL DAYS
+    totalDays: {
+      type: Number,
+      default: 0,
+    },
+
+    // 🎁 DISCOUNT
+    discount: {
+      type: Number,
+      default: 0,
+    },
+
     paymentStatus: {
       type: String,
       enum: ["pending", "paid"],
