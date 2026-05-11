@@ -7,7 +7,11 @@ import {
   assignRoomNumber,
   confirmPayment,
   cancelBooking,
-  userPayment
+  userPayment,
+  clearMyBookings,
+  deleteBooking,
+  deleteOwnerBooking,
+  clearOwnerBookings
 } from "./booking.controller.js";
 
 import { protect } from "../../middleware/authMiddleware.js";
@@ -26,6 +30,14 @@ router.put("/:id/confirm", protect, confirmBooking);
 router.put("/:id/assign-room", protect, assignRoomNumber);
 
 router.put("/:id/pay", protect, userPayment);
+
+router.delete("/clear", protect, clearMyBookings);
+
+router.delete("/:id", protect, deleteBooking);
+
+router.delete("/owner/:id", protect, deleteOwnerBooking);
+
+router.delete("/owner/clear/all", protect, clearOwnerBookings);
 
 router.put(
   "/:id/payment-confirm",
