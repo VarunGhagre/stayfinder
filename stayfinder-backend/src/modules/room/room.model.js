@@ -43,6 +43,12 @@ const roomSchema = new mongoose.Schema(
       default: "PG",
     },
 
+    priceType: {
+      type: String,
+      enum: ["night", "day", "week", "month"],
+      default: "month",
+    },
+
     // availableBeds: Number,
   },
   { timestamps: true },
