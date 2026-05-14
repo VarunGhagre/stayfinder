@@ -7,6 +7,7 @@ function AddRoom() {
 
   const [form, setForm] = useState({
     title: "",
+    category: "PG",
     price: "",
     priceType: "month", // ✅ NEW
     city: "",
@@ -15,6 +16,14 @@ function AddRoom() {
   });
 
   const [images, setImages] = useState([]);
+
+  const CATEGORIES = [
+  { id:"PG",        emoji:"🛏️", label:"PG"        },
+  { id:"Hostel",    emoji:"🏨", label:"Hostel"    },
+  { id:"Flat",      emoji:"🏢", label:"Flat"      },
+  { id:"Villa",     emoji:"🏰", label:"Villa"     },
+  { id:"Apartment", emoji:"🏗️", label:"Apartment" },
+];
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -72,6 +81,46 @@ function AddRoom() {
             onChange={handleChange}
             className="w-full bg-[#26262A] p-3 rounded outline-none"
           />
+
+          {/* CATEGORY */}
+<div>
+  <p className="text-sm text-[#C9973A] mb-2">
+    Select Category
+  </p>
+
+  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+
+    {CATEGORIES.map((cat) => (
+
+      <button
+        type="button"
+        key={cat.id}
+        onClick={() =>
+          setForm({
+            ...form,
+            category: cat.id,
+          })
+        }
+        className={`p-3 rounded-xl border transition-all duration-300
+        ${
+          form.category === cat.id
+            ? "bg-[#C9973A] text-black border-[#C9973A]"
+            : "bg-[#26262A] border-[#3A3A3D] text-white"
+        }`}
+      >
+        <div className="text-2xl mb-1">
+          {cat.emoji}
+        </div>
+
+        <p className="text-sm">
+          {cat.label}
+        </p>
+      </button>
+
+    ))}
+
+  </div>
+</div>
 
           <div className="flex gap-3">
             {/* PRICE */}
