@@ -1,4 +1,4 @@
-# 🏡 StayFinder – Airbnb Clone (MERN Stack)
+# 🏡 StayFinder
 
 StayFinder is a full-stack room booking platform inspired by Airbnb. Users can explore rooms, book stays, and owners can list their properties with images and details.
 
