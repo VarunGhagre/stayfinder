@@ -406,4 +406,4 @@ export default function MyBookings() {
       <Modal open={modal?.type==="clearAll"} title="Clear All Bookings" message={`This will permanently delete all ${bookings.length} bookings. Cannot be undone.`}  confirmLabel="Clear All"  danger={true}  onConfirm={doClear}               onCancel={() => setModal(null)}/>
     </>
   );
-}
+}.
