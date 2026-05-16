@@ -149,7 +149,7 @@ npm run dev
 
 ## 📸 Screenshots
 
-(Add your project screenshots here)
+(Add your project screenshots)
 
 ---
 
