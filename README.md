@@ -4,7 +4,7 @@ StayFinder is a full-stack room booking platform inspired by Airbnb. Users can e
 
 ---
 
-## 🚀 Feature
+## 🚀 Features
 
 ### 👤 User
 
