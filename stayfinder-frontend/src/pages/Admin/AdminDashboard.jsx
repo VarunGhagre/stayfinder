@@ -9,7 +9,6 @@ function AdminDashboard() {
     { title: "Bookings", path: "/admin/bookings" },
   ];
 
-
   return (
     <div className="min-h-screen bg-[#0E0E0F] text-white p-10">
       <h1 className="text-3xl mb-10 text-[#C9973A]">Admin Dashboard</h1>

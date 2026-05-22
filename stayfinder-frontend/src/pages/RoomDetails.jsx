@@ -24,6 +24,7 @@ import {
   UtensilsCrossed,
 } from "lucide-react";
 import api from "../api/axios";
+import RoomMap from "../components/RoomMap";
 
 const G = {
   gold: "#C9973A",
@@ -403,6 +404,7 @@ export default function RoomDetails() {
 const [rating, setRating] = useState(5);
 const [comment, setComment] = useState("");
 
+const [showMap, setShowMap] = useState(false);
 
   const fileRef = useRef(null);
   const toastRef = useRef(null);
@@ -1863,6 +1865,20 @@ const [comment, setComment] = useState("");
         </div>
       )}
 
+
+<button
+  onClick={() => setShowMap(true)}
+  className="flex items-center gap-2 px-4 py-2 rounded-xl text-white transition-all duration-300 hover:scale-105"
+  style={{
+    background: "#1E1E21",
+    border: "1px solid rgba(201,151,58,0.2)",
+  }}
+>
+  <MapPin size={18} color="#C9973A" />
+
+  View on Map
+</button>
+
 {/* =========================
     AIRBNB STYLE REVIEWS
 ========================= */}
@@ -2145,6 +2161,64 @@ const [comment, setComment] = useState("");
   </div>
 </div>
 
+
+{/* MAP MODAL */}
+{showMap && (
+
+  <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      background: "rgba(0,0,0,0.7)",
+      zIndex: 9999,
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: "20px",
+    }}
+  >
+
+    {/* BOX */}
+    <div
+      style={{
+        width: "100%",
+        maxWidth: "900px",
+        background: "#111",
+        borderRadius: "24px",
+        overflow: "hidden",
+        position: "relative",
+      }}
+    >
+
+      {/* CLOSE */}
+      <button
+        onClick={() => setShowMap(false)}
+        style={{
+          position: "absolute",
+          top: "15px",
+          right: "15px",
+          zIndex: 1000,
+          background: "#fff",
+          border: "none",
+          width: "40px",
+          height: "40px",
+          borderRadius: "50%",
+          cursor: "pointer",
+        }}
+      >
+        <X size={20} />
+      </button>
+
+      {/* MAP */}
+      <RoomMap
+        lat={room.latitude}
+        lng={room.longitude}
+        title={room.title}
+      />
+
+    </div>
+  </div>
+)}
 
 
       <div className={`toast${toast ? " show" : ""}`}>{toast}</div>

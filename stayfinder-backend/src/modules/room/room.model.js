@@ -49,6 +49,9 @@ const roomSchema = new mongoose.Schema(
       default: "month",
     },
 
+    latitude: Number,
+    longitude: Number,
+
     // availableBeds: Number,
   },
   { timestamps: true },

@@ -158,6 +158,25 @@ function AddRoom() {
             className="w-full bg-[#26262A] p-3 rounded outline-none"
           />
 
+  <input
+    type="number"
+    step="any"
+    name="latitude"
+    placeholder="Latitude"
+    onChange={handleChange}
+    className="w-full bg-[#26262A] p-3 rounded outline-none"
+  />
+
+  <input
+    type="number"
+    step="any"
+    name="longitude"
+    placeholder="Longitude"
+    onChange={handleChange}
+    className="w-full bg-[#26262A] p-3 rounded outline-none"
+  />
+
+
           <input
             type="number"
             name="totalBeds"
