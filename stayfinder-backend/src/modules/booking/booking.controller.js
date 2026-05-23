@@ -1,7 +1,6 @@
 import Booking from "./booking.model.js";
 import Room from "../room/room.model.js";
 import Notification from "../notification/notification.model.js";
-console.log("CREATE BOOKING API HIT");
 
 export const createBooking = async (req, res) => {
   try {
