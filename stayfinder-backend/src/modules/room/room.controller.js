@@ -1,6 +1,8 @@
 import Room from "./room.model.js";
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
+import Booking from "../booking/booking.model.js";
+import Review from "../review/review.model.js";
 
 const uploadToCloudinary = async (filePath, folder = "stayfinder/rooms") => {
   const result = await cloudinary.uploader.upload(filePath, {
@@ -218,5 +220,58 @@ export const updateRoom = async (req, res) => {
   } catch (error) {
     console.error("updateRoom error:", error);
     res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const deleteRoom = async (
+  req,
+  res
+) => {
+
+  try {
+
+    const room = await Room.findById(
+      req.params.id
+    );
+
+    if (!room) {
+      return res.status(404).json({
+        message: "Room not found",
+      });
+    }
+
+    // ✅ owner check
+    if (
+      room.owner.toString() !==
+      req.user._id.toString()
+    ) {
+      return res.status(403).json({
+        message: "Not authorized",
+      });
+    }
+
+    // ✅ delete related bookings
+    await Booking.deleteMany({
+      room: room._id,
+    });
+
+    // ✅ delete related reviews
+    await Review.deleteMany({
+      room: room._id,
+    });
+
+    // ✅ delete room
+    await room.deleteOne();
+
+    res.json({
+      message: "Room deleted successfully",
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message,
+    });
+
   }
 };

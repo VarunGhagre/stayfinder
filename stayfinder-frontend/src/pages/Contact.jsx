@@ -46,7 +46,6 @@ function Contact() {
 
     } catch (err) {
       setLoading(false);
-      console.log(err);
       alert("Something went wrong ❌");
     }
   };

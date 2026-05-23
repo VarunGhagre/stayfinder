@@ -547,7 +547,6 @@ const [showMap, setShowMap] = useState(false);
         navigate("/my-bookings");
       }, 1000);
     } catch (err) {
-      console.log(err.response?.data);
       const msg = err.response?.data?.message;
 
       if (msg === "You already booked this room") {

@@ -5,7 +5,8 @@ import {
   approveRoom,
   getPendingRooms,
   getRoomById,
-  updateRoom
+  updateRoom,
+  deleteRoom
 } from "./room.controller.js";
 
 import { protect } from "../../middleware/authMiddleware.js";
@@ -35,5 +36,7 @@ router.put(
 );
 
 router.get("/:id", getRoomById);
+
+router.delete("/:id", protect, deleteRoom);
 
 export default router;

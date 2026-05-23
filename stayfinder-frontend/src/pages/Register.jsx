@@ -28,7 +28,6 @@ function Register() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0E0E0F] relative overflow-hidden text-white px-4">
-
       {/* Glow */}
       <div className="absolute w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-3xl top-[-100px] left-[-100px]" />
       <div className="absolute w-[400px] h-[400px] bg-[#C9973A]/20 rounded-full blur-3xl bottom-[-100px] right-[-100px]" />
@@ -67,12 +66,25 @@ function Register() {
           required
           onChange={(e) => setForm({ ...form, country: e.target.value })}
         >
-          <option value="">Select Country</option>
-          <option value="India">India</option>
-          <option value="USA">USA</option>
-          <option value="UK">UK</option>
-          <option value="Canada">Canada</option>
-          <option value="Australia">Australia</option>
+          <option value="India" className="text-black">
+            India
+          </option>
+
+          <option value="USA" className="text-black">
+            USA
+          </option>
+
+          <option value="UK" className="text-black">
+            UK
+          </option>
+
+          <option value="Canada" className="text-black">
+            Canada
+          </option>
+
+          <option value="Australia" className="text-black">
+            Australia
+          </option>
         </select>
 
         {/* Role */}
@@ -80,22 +92,22 @@ function Register() {
           className="inputSelect"
           onChange={(e) => setForm({ ...form, role: e.target.value })}
         >
-          <option value="user">User</option>
-          <option value="owner">Owner</option>
+          <option value="user" className="text-black">
+            User
+          </option>
+
+          <option value="owner" className="text-black">
+            Owner
+          </option>
         </select>
 
         {/* Button */}
-        <button className="btn">
-          Register
-        </button>
+        <button className="btn">Register</button>
 
         {/* 🔥 Login Link */}
         <p className="text-center text-sm text-gray-400">
           Already have an account?{" "}
-          <Link
-            to="/login"
-            className="text-[#C9973A] hover:underline"
-          >
+          <Link to="/login" className="text-[#C9973A] hover:underline">
             Login
           </Link>
         </p>

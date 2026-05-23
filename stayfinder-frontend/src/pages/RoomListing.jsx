@@ -3,7 +3,7 @@ import { useLocation, useSearchParams } from "react-router-dom";
 import {
   SlidersHorizontal, X, ChevronDown, Search,
   MapPin, BedDouble, Home, Building2,
-  Utensils, Users, Wifi, Wind, Car, ShieldCheck,
+  Utensils, Users, Wifi, Wind, Car, ShieldCheck, MoreVertical,
 } from "lucide-react";
 import api from "../api/axios";
 import Layout from "../components/Layout";
@@ -169,6 +169,7 @@ export default function RoomListing() {
   const [searchCity, setSearchCity] = useState(
     searchParams.get("city") || searchData.location || ""
   );
+  const [menuOpen, setMenuOpen] = useState(null);
 
   // Applied filters (used for actual filtering)
   const [applied, setApplied] = useState({
@@ -179,6 +180,34 @@ export default function RoomListing() {
 
   const navigate = useNavigate();
 const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+const handleDeleteRoom = async (id) => {
+
+  const confirmDelete = window.confirm(
+    "Delete this room permanently?"
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+
+    await api.delete(`/rooms/${id}`);
+
+    setRooms((prev) =>
+      prev.filter((room) => room._id !== id)
+    );
+
+    alert("Room deleted successfully 🗑️");
+
+  } catch (err) {
+
+    alert(
+      err.response?.data?.message ||
+      "Failed to delete room"
+    );
+
+  }
+};
 
   // ── Fetch rooms ───────────────────────────────────────────
   useEffect(() => {
@@ -353,9 +382,111 @@ const userInfo = JSON.parse(localStorage.getItem("userInfo"));
             </div>
           ) : (
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))", gap:20 }}>
-              {filtered.map((room, i) => (
-                <RoomCard key={room._id} room={room} index={i}/>
-              ))}
+        {filtered.map((room, i) => (
+
+  <div
+    key={room._id}
+    style={{
+      position: "relative",
+    }}
+  >
+
+    <RoomCard
+      room={room}
+      index={i}
+    />
+
+    {/* OWNER MENU */}
+    {userInfo?.role === "owner" &&
+      String(room.owner?._id || room.owner) ===
+        String(userInfo._id) && (
+
+      <div
+        style={{
+          position: "absolute",
+          top: "12px",
+          left: "12px",
+          zIndex: 20,
+        }}
+      >
+
+        {/* 3 DOT BUTTON */}
+        <button
+          onClick={() =>
+            setMenuOpen(
+              menuOpen === room._id
+                ? null
+                : room._id
+            )
+          }
+          style={{
+            width: "36px",
+            height: "36px",
+            borderRadius: "50%",
+            border: "none",
+            background:
+              "rgba(0,0,0,0.65)",
+            color: "white",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            backdropFilter: "blur(6px)",
+          }}
+        >
+          <MoreVertical size={18} />
+        </button>
+
+        {/* DROPDOWN */}
+        {menuOpen === room._id && (
+
+          <div
+            style={{
+              position: "absolute",
+              top: "44px",
+              left: 0,
+              background: "#1E1E21",
+              border:
+                "1px solid rgba(201,151,58,0.15)",
+              borderRadius: "14px",
+              overflow: "hidden",
+              minWidth: "140px",
+              boxShadow:
+                "0 10px 30px rgba(0,0,0,0.45)",
+              animation:
+                "rlFadeUp 0.2s ease",
+            }}
+          >
+
+            {/* DELETE */}
+            <button
+              onClick={() =>
+                handleDeleteRoom(room._id)
+              }
+              style={{
+                width: "100%",
+                padding: "12px 14px",
+                border: "none",
+                background: "transparent",
+                color: "#ff6b6b",
+                textAlign: "left",
+                cursor: "pointer",
+                fontSize: "13px",
+              }}
+            >
+              🗑 Delete Room
+            </button>
+
+          </div>
+
+        )}
+
+      </div>
+
+    )}
+
+  </div>
+))}
             </div>
           )}
         </div>
