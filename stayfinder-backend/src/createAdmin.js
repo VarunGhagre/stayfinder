@@ -15,7 +15,6 @@ mongoose.connect(process.env.MONGO_URI).then(async () => {
     role: "admin",
   });
 
-  console.log("Admin created");
   process.exit();
 });
 
