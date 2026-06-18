@@ -264,7 +264,7 @@ export const deleteRoom = async (
     await room.deleteOne();
 
     res.json({
-      message: "Room deleted",
+      message: "Room deleted successfully",
     });
 
   } catch (error) {
