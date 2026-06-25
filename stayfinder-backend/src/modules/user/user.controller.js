@@ -4,34 +4,76 @@ import generateToken from "../../utils/generateToken.js";
 
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password, role, mobile, country } = req.body;
 
-    // 🔴 validation
+    const {
+      name,
+      email,
+      password,
+      role,
+      mobile,
+      country,
+
+      // Owner Fields
+      propertyName,
+      propertyType,
+      businessAddress,
+      licenseNumber,
+      ownerIdNumber,
+
+    } = req.body;
+
+    // Mobile + Country Validation
     if (!mobile || !country) {
       return res.status(400).json({
         message: "Mobile number and country are required",
       });
     }
 
-    // check user exists
+    // Owner Validation
+    if (role === "owner") {
+
+      if (
+        !propertyName ||
+        !propertyType ||
+        !businessAddress ||
+        !licenseNumber ||
+        !ownerIdNumber
+      ) {
+        return res.status(400).json({
+          message: "All owner details are required",
+        });
+      }
+
+    }
+
+    // Check User Exists
     const userExists = await User.findOne({ email });
 
     if (userExists) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({
+        message: "User already exists",
+      });
     }
 
-    // hash password
+    // Hash Password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // create user
+    // Create User
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
       role,
-      mobile,     // ✅ added
-      country,    // ✅ added
+      mobile,
+      country,
+
+      // Owner Data
+      propertyName,
+      propertyType,
+      businessAddress,
+      licenseNumber,
+      ownerIdNumber,
     });
 
     res.status(201).json({
@@ -39,13 +81,24 @@ export const registerUser = async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      mobile: user.mobile,     // ✅ return
-      country: user.country,   // ✅ return
-      token: generateToken(user._id, user.role),
+      mobile: user.mobile,
+      country: user.country,
+
+      propertyName: user.propertyName,
+      propertyType: user.propertyType,
+
+      token: generateToken(
+        user._id,
+        user.role
+      ),
     });
 
   } catch (error) {
-    res.status(500).json({ message: error.message });
+
+    res.status(500).json({
+      message: error.message,
+    });
+
   }
 };
 
