@@ -10,6 +10,12 @@ function Register() {
     role: "user",
     mobile: "",
     country: "",
+
+    propertyName: "",
+    propertyType: "",
+    businessAddress: "",
+    licenseNumber: "",
+    ownerIdNumber: "",
   });
 
   const navigate = useNavigate();
@@ -90,6 +96,7 @@ function Register() {
         {/* Role */}
         <select
           className="inputSelect"
+          value={form.role}
           onChange={(e) => setForm({ ...form, role: e.target.value })}
         >
           <option value="user" className="text-black">
@@ -100,6 +107,105 @@ function Register() {
             Owner
           </option>
         </select>
+
+        {form.role === "owner" && (
+          <div className="space-y-4 border border-[#C9973A]/20 p-4 rounded-xl bg-white/5">
+            <h3 className="text-[#C9973A] font-semibold">
+              🏨 Owner Verification Details
+            </h3>
+
+            <div className="inputBox">
+              <input
+                type="text"
+                required
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    propertyName: e.target.value,
+                  })
+                }
+              />
+              <span>Property / Hotel Name</span>
+            </div>
+
+            <select
+              className="inputSelect"
+              required
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  propertyType: e.target.value,
+                })
+              }
+            >
+              <option value="" className="text-black">
+                Select Property Type
+              </option>
+
+              <option value="Hotel" className="text-black">
+                Hotel
+              </option>
+
+              <option value="Resort" className="text-black">
+                Resort
+              </option>
+
+              <option value="PG" className="text-black">
+                PG
+              </option>
+
+              <option value="Hostel" className="text-black">
+                Hostel
+              </option>
+
+              <option value="Apartment" className="text-black">
+                Apartment
+              </option>
+            </select>
+
+            <div className="inputBox">
+              <input
+                type="text"
+                required
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    businessAddress: e.target.value,
+                  })
+                }
+              />
+              <span>Business Address</span>
+            </div>
+
+            <div className="inputBox">
+              <input
+                type="text"
+                required
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    licenseNumber: e.target.value,
+                  })
+                }
+              />
+              <span>Business License Number</span>
+            </div>
+
+            <div className="inputBox">
+              <input
+                type="text"
+                required
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    ownerIdNumber: e.target.value,
+                  })
+                }
+              />
+              <span>Aadhaar / PAN Number</span>
+            </div>
+          </div>
+        )}
 
         {/* Button */}
         <button className="btn">Register</button>
